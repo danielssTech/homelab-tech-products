@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg[binary] #driver para postgres
+passlib
+bcrypt
+
+#variables del curso de 12 hrs
+pydantic_settings 
