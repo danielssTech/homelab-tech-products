@@ -1,14 +1,16 @@
 from fastapi import FastAPI, Depends, Path, status, HTTPException
-
-from . import models #verificar si es que esta bien importado 
-
+from app.routes import appProducts, health
+from . import models
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from contextlib import asynccontextmanager
-
+from .db import engine, SessionLocal
 
 app = FastAPI() 
 
-@app.get("/health")
-def health_check():
-    return {"status": "ok"}
+models.Base.metadata.create_all(bind=engine)
+
+app.include_router(appProducts.product_router)
+app.include_router(health.helth_router)
+
+
