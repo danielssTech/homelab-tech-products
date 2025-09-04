@@ -3,6 +3,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy import select
 from app.db import get_db
 from app import models, schemas
+from sqlalchemy.exc import IntegrityError
+
 
 product_router = APIRouter (tags=["techProduct"])
 
@@ -15,10 +17,12 @@ def create (request: schemas.ProductCreate, db: Session = Depends(get_db) ):
     db.add (new_product)
     try:
         db.commit()
-    except Exception as e:
+    except IntegrityError as e:
         db.rollback()
-        # Mapea errores de DB a algo entendible
-        raise HTTPException(status_code=503, detail="DB error") from e
+        raise e
+    except Exception:
+        db.rollback()
+        raise
     db.refresh(new_product)
     return new_product
 
