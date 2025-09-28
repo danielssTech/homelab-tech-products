@@ -27,7 +27,7 @@ def create (request: schemas.ProductCreate, db: Session = Depends(get_db) ):
     return new_product
 
 
-@product_router.get('/products', response_model=list[schemas.ProductOut])
+@product_router.get('/products_get', response_model=list[schemas.ProductOut])
 def list_items(skip: int = Query(0, ge=0),limit: int = Query(10, ge=1, le=100),
                db: Session = Depends(get_db),):
     stmt = select(models.AppProduct).offset(skip).limit(limit)
