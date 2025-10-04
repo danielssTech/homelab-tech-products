@@ -10,10 +10,15 @@ from .db import engine, SessionLocal
 from starlette.responses import Response
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import OperationalError, IntegrityError, SQLAlchemyError
-
+from prometheus_fastapi_instrumentator import Instrumentator
 
 logger = setup_logging()
 app = FastAPI() 
+
+# --- Instrumentator global ---
+instrumentator = Instrumentator().instrument(app)
+instrumentator.expose(app, endpoint="/metrics", include_in_schema=False)
+
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -72,3 +77,4 @@ async def unhandled_handler(request: Request, exc: Exception):
         status_code=500,
         content={"detail": "Internal server error."},
     )
+

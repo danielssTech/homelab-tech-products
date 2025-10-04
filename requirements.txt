@@ -7,3 +7,6 @@ bcrypt
 
 #variables del curso de 12 hrs
 pydantic_settings 
+
+#prometheus 
+prometheus-fastapi-instrumentator
