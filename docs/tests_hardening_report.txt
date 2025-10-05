@@ -1,0 +1,23 @@
+# TechProducts - Functional & Hardening Tests
+Date: 2025-10-05
+
+## 1. Functional tests
+✔ /api/products_get returns product list  
+✔ POST /api/products creates new item (HTTP 201)  
+✔ Invalid route returns HTTP 404  
+✔ Malformed JSON returns HTTP 400  
+✔ Logs include rt and upstream timings  
+
+## 2. Resilience
+✔ Simulated DB crash returned HTTP 503 with clear message  
+
+## 3. Hardening
+✔ Default Nginx pages removed  
+✔ Permissions restricted (root/admin only)  
+✔ Secrets moved to .env (excluded from repo)  
+✔ Log rotation configured  
+✔ Error pages verified  
+
+## 4. Summary
+All functional, resilience and hardening checks passed.
+System behaves securely and predictably under failure conditions.
