@@ -42,7 +42,6 @@ async def log_requests(request: Request, call_next):
             duration_ms,
         )
 
-# 503 si la DB no responde, timeout, DNS, etc.
 @app.exception_handler(OperationalError)
 async def op_error_handler(request: Request, exc: OperationalError):
     logger.error("DB OperationalError on %s %s :: %s", request.method, request.url.path, str(exc))
@@ -51,7 +50,6 @@ async def op_error_handler(request: Request, exc: OperationalError):
         content={"detail": "Database unavailable. Please try again later."},
     )
 
-# 409 si violas constraints (únicos, FK, etc.)
 @app.exception_handler(IntegrityError)
 async def integrity_error_handler(request: Request, exc: IntegrityError):
     logger.warning("IntegrityError on %s %s :: %s", request.method, request.url.path, str(exc))
@@ -60,7 +58,6 @@ async def integrity_error_handler(request: Request, exc: IntegrityError):
         content={"detail": "Integrity error: constraint violation."},
     )
 
-# Cualquier otro error de SQLAlchemy
 @app.exception_handler(SQLAlchemyError)
 async def sa_error_handler(request: Request, exc: SQLAlchemyError):
     logger.error("SQLAlchemyError on %s %s :: %s", request.method, request.url.path, str(exc))
@@ -69,7 +66,6 @@ async def sa_error_handler(request: Request, exc: SQLAlchemyError):
         content={"detail": "Database error."},
     )
 
-# Fallback genérico
 @app.exception_handler(Exception)
 async def unhandled_handler(request: Request, exc: Exception):
     logger.exception("Unhandled error on %s %s :: %s", request.method, request.url.path, str(exc))
