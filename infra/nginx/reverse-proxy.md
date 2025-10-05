@@ -75,18 +75,17 @@ Static Deployment Path
     sudo cp -r static_site/* /var/www/techProducts/html/
 
 Useful Commands
-    sudo nginx -t                 # Test syntax
-    sudo systemctl reload nginx   # Reload configuration
-    curl -i http://192.168.133.1:8000/api/health   # backend reachability
-    curl -i http://localhost/api/health            # through Nginx
+    sudo nginx -t                                   # Test syntax
+    sudo systemctl reload nginx                     # Reload configuration
+    curl -i http://192.168.133.1:8000/api/health    # backend reachability
+    curl -i http://localhost/api/health             # through Nginx
 
 Healthcheck
-    Endpoint: GET /health
+    Endpoint: GET /api/health
     Expected Response: 200 OK with:
     {"status":"ok","db":"up"}
 
 Quick Troubleshooting
-
 502 Bad Gateway
     FastAPI app not running at 192.168.133.1:8000
     Firewall or network issue between Nginx and the app

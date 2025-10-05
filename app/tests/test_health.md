@@ -5,7 +5,7 @@ Verify that the health endpoint returns HTTP 200 and service status.
 
 ## Steps
 1. Run the FastAPI app and ensure Nginx is active.
-2. Open browser or use curl http://192.168.133.1:8000/health
+2. Open browser or use curl http://192.168.133.10/api/health
 3. Observe the response.
 
 ## Expected Result
