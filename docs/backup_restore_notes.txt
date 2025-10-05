@@ -1,0 +1,69 @@
+# BACKUP & RESTORE - TechProducts Project
+Date: 2025-10-05  
+Backup location: /opt/backups/
+
+---
+
+## 1. Manual database backup
+Command executed:
+sudo -u postgres pg_dump -d tech_products -F c -f /opt/backups/techproducts_2025-10-05_14-23.dump
+
+Result:
+✔ Backup file successfully created in /opt/backups/  
+✔ Verified contents with `pg_restore -l`  
+✔ File owned by postgres:postgres  
+
+---
+
+## 2. Automated daily backup (cron job)
+User: postgres  
+Scheduled task:
+0 2 * * * pg_dump -d tech_products -F c -f /opt/backups/techproducts_$(date +\%F_\%H-%M).dump
+
+Frequency: Every day at 02:00 AM  
+Verification: `sudo crontab -u postgres -l`  
+
+---
+
+## 3. Database restoration test
+Database created:
+sudo -u postgres createdb techproducts_restore  
+
+Restore command:
+sudo -u postgres pg_restore -O -x -d techproducts_restore /opt/backups/techproducts_2025-10-05_14-23.dump  
+
+---
+
+## 4. Data verification after restore
+List tables:
+sudo -u postgres psql -d techproducts_restore -c '\dt app.*'
+
+Result:
+ Schema |   Name   | Type  |  Owner
+--------+----------+-------+----------
+ app    | products | table | mig_user
+
+Count records:
+sudo -u postgres psql -d techproducts_restore -c 'SELECT COUNT(*) FROM app.products;'
+
+ count
+-------
+     3
+(1 row)
+
+---
+
+## 5. Summary
+✔ Manual and automated backups verified successfully  
+✔ Restoration test confirmed (structure and data match original)  
+✔ Schema used: `app`  
+✔ Cron job correctly configured under user `postgres`
+
+---
+
+## 6. Visual evidence
+/screenshots/
+├─ pg_dump_success.png      → shows the pg_dump execution and .dump file creation  
+├─ pg_restore_tables.png    → shows the \dt output listing the table `app.products`  
+├─ pg_restore_count.png     → shows SELECT COUNT(*) confirming record count  
+├─ cron_list.png            → shows active cron job line for daily backup
