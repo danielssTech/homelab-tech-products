@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status
 from sqlalchemy import text
-from app.db import engine
+from app.core.db import engine
 
 helth_router = APIRouter(tags=["health"])
 
