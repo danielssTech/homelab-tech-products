@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, func
 from app.core.db import Base
+
 class AppProduct(Base):
     __tablename__ = "products"
     __table_args__ = {"schema": "app"}  
