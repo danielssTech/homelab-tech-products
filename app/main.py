@@ -2,11 +2,11 @@ import time
 from fastapi import FastAPI, Depends, Path, status, HTTPException, Request
 from app.core.logging import setup_logging
 from app.routes import appProducts, health
-from . import models
+from .models import product
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from contextlib import asynccontextmanager
-from .db import engine, SessionLocal
+from .core.db import engine, SessionLocal
 from starlette.responses import Response
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import OperationalError, IntegrityError, SQLAlchemyError
@@ -20,7 +20,7 @@ instrumentator = Instrumentator().instrument(app)
 instrumentator.expose(app, endpoint="/metrics", include_in_schema=False)
 
 
-models.Base.metadata.create_all(bind=engine)
+product.Base.metadata.create_all(bind=engine)
 
 app.include_router(appProducts.product_router)
 app.include_router(health.helth_router)
@@ -29,6 +29,7 @@ app.include_router(health.helth_router)
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
     start = time.perf_counter()
+    #response = None
     try:
         response: Response = await call_next(request)
         return response
@@ -41,6 +42,7 @@ async def log_requests(request: Request, call_next):
             getattr(response, "status_code", "NA"),
             duration_ms,
         )
+
 
 @app.exception_handler(OperationalError)
 async def op_error_handler(request: Request, exc: OperationalError):
