@@ -1,8 +1,7 @@
 #DB access 
-#business logic
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
-from sqlalchemy import select
+from sqlalchemy import select, delete, update
 from app.models import product
 from app.schemas import product_schema
 from sqlalchemy.exc import IntegrityError
@@ -30,3 +29,21 @@ def post_product_service (request: product_schema.ProductCreate, db: Session):
     db.refresh(new_product)
     
     return new_product
+
+def get_product_repository (db: Session, id: int):
+    
+    stmt = select(product.AppProduct).where(product.AppProduct.id == id )
+    result = db.execute(stmt).scalar_one_or_none()
+    return result
+
+def delete_product_repository(db: Session, id: int) -> int:
+    stmt = delete(product.AppProduct).where(product.AppProduct.id == id)
+    result = db.execute(stmt)
+    db.commit()
+    return result.rowcount
+
+def update_product_repository(db: Session, id: int, request: product_schema.ProductUpdate) -> int:
+    stmt = update(product.AppProduct).where(product.AppProduct.id == id).values(name = request.name)
+    result = db.execute(stmt)
+    db.commit()
+    return result.rowcount

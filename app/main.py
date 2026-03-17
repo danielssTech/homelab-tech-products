@@ -29,6 +29,7 @@ app.include_router(health.helth_router)
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
     start = time.perf_counter()
+    #response = None
     try:
         response: Response = await call_next(request)
         return response
@@ -41,6 +42,7 @@ async def log_requests(request: Request, call_next):
             getattr(response, "status_code", "NA"),
             duration_ms,
         )
+
 
 @app.exception_handler(OperationalError)
 async def op_error_handler(request: Request, exc: OperationalError):
