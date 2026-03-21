@@ -4,6 +4,7 @@ sqlalchemy
 psycopg[binary] #driver para postgres
 passlib
 bcrypt
+alembic #alembic init alembic
 
 #variables del curso de 12 hrs
 pydantic_settings 
